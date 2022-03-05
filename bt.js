@@ -13,7 +13,7 @@
     const app = {
       songs: [
         {
-            name:'Roi Toi Luon',
+            name:'Roi Toi Luôn',
             singer:'Nal',
             image:'./images/roi-toi-luon.jpeg',
             path:'./audio/roi-toi-luon.mp3'
