@@ -2,12 +2,18 @@
     const $$ = document.querySelectorAll.bind(document);
     const playlist = $(".playlist");
     const audio = $("#audio");
+    const heading = $('header h2');
     const playBtn = $(".btn-toggle-play");
     const player = $(".player");
     const progress = $("#progress");
     const cdThumb = $(".cd-thumb");
     const btnNext = $(".btn-next");
     const btnPrev = $(".btn-prev");
+    const btnRandom = $(".btn-random");
+    const btnRepeat = $(".btn-repeat");
+    const currenttime = $("#currentTime");
+    const durtimeText = $("#durtimeText");
+    const volumeSlider = $("#volumeSlider");
     
     
     const app = {
@@ -54,6 +60,8 @@
             path:'./audio/khue-moc-lang.mp3'
         }
     ],
+      isRepeat: false,
+      isRandom: false,
       isPlaying: false,
       currentIndex: 0,
       render: function(){
@@ -62,6 +70,7 @@
                               <div class="song ${
                                 index === this.currentIndex ? "active" : ""
                               }" data-index="${index}">
+                              
                                   <div class="thumb"
                                       style="background-image: url('${song.image}')">
                                   </div>
@@ -102,6 +111,27 @@
             cd.style.opacity = newCdWidth / cdWidth;
         }
 
+        btnRandom.onclick = function(){
+          app.isRandom = !app.isRandom;
+          if (!app.isRepeat){
+            btnRandom.classList.toggle('active', app.isRandom);
+          }
+          
+        }
+
+        volumeSlider.oninput = function(){
+          audio.volume = volumeSlider.value / 100;
+          
+        }
+
+        btnRepeat.onclick = function(){
+          app.isRepeat = !app.isRepeat;
+          if (!app.isRandom) {
+            btnRepeat.classList.toggle('active', app.isRepeat);
+          }
+          
+        }
+
 
         
         playBtn.onclick = function(){
@@ -132,29 +162,87 @@
           if (audio.duration) {
             var progressUpdate = Math.floor(audio.currentTime / audio.duration * 100);
             progress.value = progressUpdate;
-            
+            var curmin = Math.floor(audio.currentTime / 60);
+            var cursec = Math.floor(audio.currentTime - curmin * 60);
+            var durmin = Math.floor(audio.duration / 60);
+            var dursec = Math.floor(audio.duration - durmin * 60);
+            if (cursec < 10) {cursec = "0"+cursec;}
+            if (curmin < 10) {curmin = "0"+curmin;}
+            if (dursec < 10) {dursec = "0"+dursec;}
+            if (durmin < 10) {durmin = "0"+durmin;}
+
+          currenttime.innerHTML = curmin +":"+cursec;
+          durtimeText.innerHTML = durmin +":"+dursec;
           }
           
         }
 
-        progress.oninput = function(e){
+        progress.oninput = function(e){ 
           const seek = audio.duration * e.target.value / 100;
           audio.currentTime = seek;
+
+          
+
+          audio.play();
+        }
+
+        audio.onended = function(){
+          if (app.isRepeat){
+            app.isRandom = false;
+            audio.play();
+          }
+          else{
+            btnNext.click();
+          }
           
         }
 
         btnNext.onclick = function(){
-          app.nextSong();
+          if (app.isRandom){
+            app.playRandomSong()
+          }
+          else{
+            app.nextSong();
+          }
+          
           audio.play();
         }
 
         btnPrev.onclick = function(){
-          app.prevSong();
+          if (app.isRandom){
+            app.playRandomSong()
+          }
+          else{
+            app.prevSong();;
+          }
+          
           audio.play();
+        }
+
+        playlist.onclick = function(e){
+          const songNode = e.target.closest('.song:not(.active)');
+          if (songNode || e.target.closest('.option')){
+            if (songNode) {
+              app.currentIndex = songNode.dataset.index;
+              app.loadCurrent();
+              audio.play();
+            }
+          }
         }
 
 
       },
+
+      playRandomSong: function() {
+        let newIndex;
+        do {
+          newIndex  = Math.floor(Math.random() * app.songs.length);
+        } while (newIndex === this.currentIndex);
+        this.currentIndex = newIndex;
+        this.loadCurrent();
+      },
+
+
 
       
       defineProperties: function() {
@@ -168,8 +256,6 @@
 
 
       loadCurrent: function(){
-        const cdThumb = $('.cd-thumb');
-        const heading = $('header h2');
 
         heading.textContent = this.currentSong.name;
         cdThumb.style.backgroundImage = `url(${this.currentSong.image})`;

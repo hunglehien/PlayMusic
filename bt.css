@@ -90,6 +90,7 @@ header h2 {
   color: #666;
   padding: 18px;
   font-size: 18px;
+  cursor: pointer;
 }
 
 .control .btn.active {
@@ -106,6 +107,22 @@ header h2 {
   align-items: center;
   justify-content: center;
   background-color: var(--primary-color);
+}
+#timebox {
+  display: flex;
+  justify-content: center;
+}
+
+#durtimeText {
+  position: relative;
+  left: 5px;
+  top: -8px;
+}
+
+#currentTime {
+  position: relative;
+  right: 5px;
+  top: -8px;
 }
 
 .progress {

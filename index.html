@@ -59,14 +59,28 @@
           </div>
         </div>
 
+        <div id="timebox">
+          <span id="currentTime">00:00</span>
+          <input
+            id="progress"
+            class="progress"
+            type="range"
+            value="0"
+            step="1"
+            min="1"
+            max="100"
+          />
+          <span id="durtimeText">00:00</span>
+        </div>
+
+        <button id="mutebn"></button>
         <input
-          id="progress"
-          class="progress"
+          id="volumeSlider"
           type="range"
-          value="0"
-          step="1"
-          min="1"
+          min="0"
           max="100"
+          value="100"
+          step="1"
         />
 
         <audio id="audio" src=""></audio>
