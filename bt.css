@@ -92,6 +92,25 @@ header h2 {
   font-size: 18px;
   cursor: pointer;
 }
+.btn.btn-random,
+.btn-repeat {
+  position: relative;
+}
+.btn.btn-random:hover .btn-random-hover,
+.btn.btn-repeat:hover .btn-repeat-hover {
+  display: block;
+}
+
+.btn-random-hover,
+.btn-repeat-hover {
+  position: absolute;
+  display: none;
+  width: 110px;
+  font-size: 13px;
+  top: -8px;
+  left: -19px;
+  font-weight: bold;
+}
 
 .control .btn.active {
   color: var(--primary-color);

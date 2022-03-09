@@ -113,9 +113,8 @@
 
         btnRandom.onclick = function(){
           app.isRandom = !app.isRandom;
-          if (!app.isRepeat){
-            btnRandom.classList.toggle('active', app.isRandom);
-          }
+          
+            btnRandom.classList.toggle('active');
           
         }
 
@@ -126,10 +125,9 @@
 
         btnRepeat.onclick = function(){
           app.isRepeat = !app.isRepeat;
-          if (!app.isRandom) {
-            btnRepeat.classList.toggle('active', app.isRepeat);
-          }
-          
+
+                btnRepeat.classList.toggle('active');
+             
         }
 
 
@@ -187,7 +185,7 @@
         }
 
         audio.onended = function(){
-          if (app.isRepeat){
+          if (app.isRepeat) {
             app.isRandom = false;
             audio.play();
           }
@@ -198,7 +196,7 @@
         }
 
         btnNext.onclick = function(){
-          if (app.isRandom){
+          if (app.isRandom) {
             app.playRandomSong()
           }
           else{
@@ -221,10 +219,13 @@
 
         playlist.onclick = function(e){
           const songNode = e.target.closest('.song:not(.active)');
+          const clickedSong = songNode.closest('.song');
           if (songNode || e.target.closest('.option')){
             if (songNode) {
-              app.currentIndex = songNode.dataset.index;
+              app.currentIndex = songNode.getAttribute('data-index');
               app.loadCurrent();
+              playlist.querySelector('.song.active').classList.remove('active');
+              clickedSong.classList.add('active');
               audio.play();
             }
           }
@@ -240,6 +241,7 @@
         } while (newIndex === this.currentIndex);
         this.currentIndex = newIndex;
         this.loadCurrent();
+        this.activeSong();
       },
 
 
@@ -262,12 +264,34 @@
         audio.src = this.currentSong.path;
       },
 
+      activeSong: function() {
+        const itemSong = $$('.song')
+        itemSong.forEach((item, index) => {
+            if(index === this.currentIndex) {
+                item.classList.add('active')
+            } else {
+                item.classList.remove('active')
+            }
+        })
+    },
+
+    activeSong2: function(){
+      var loopSongs = $$('.song');
+      for (song of loopSongs){
+              song.classList.remove('active')
+      }
+      const activeSong = loopSongs[this.currentIndex]
+      activeSong.classList.add('active')
+  },
+
       nextSong: function() {
         this.currentIndex++;
         if (this.currentIndex >= this.songs.length) {
           this.currentIndex = 0;
         }
+        this.activeSong();
         this.loadCurrent();
+        
       },
 
       prevSong: function() {
@@ -275,7 +299,9 @@
         if (this.currentIndex < 0) {
           this.currentIndex = this.songs.length - 1;
         }
+        this.activeSong();
         this.loadCurrent();
+        
       },
 
       
