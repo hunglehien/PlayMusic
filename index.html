@@ -74,16 +74,20 @@
           />
           <span id="durtimeText">00:00</span>
         </div>
-
-        <button id="mutebn"></button>
-        <input
-          id="volumeSlider"
-          type="range"
-          min="0"
-          max="100"
-          value="100"
-          step="1"
-        />
+        <div class="volume">
+          <div id="mutebn">
+            <i class="fas fa-volume-up icon-voice"></i>
+            <i class="fas fa-volume-mute icon-mute"></i>
+          </div>
+          <input
+            id="volumeSlider"
+            type="range"
+            min="0"
+            max="100"
+            value="100"
+            step="1"
+          />
+        </div>
 
         <audio id="audio" src=""></audio>
       </div>

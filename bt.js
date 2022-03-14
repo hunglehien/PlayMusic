@@ -14,7 +14,8 @@
     const currenttime = $("#currentTime");
     const durtimeText = $("#durtimeText");
     const volumeSlider = $("#volumeSlider");
-    
+    const volumeToggle = $("#mutebn");
+    const inputVolume = $("#volumeSlider");
     
     const app = {
       songs: [
@@ -63,6 +64,7 @@
       isRepeat: false,
       isRandom: false,
       isPlaying: false,
+      isMute: false,
       currentIndex: 0,
       render: function(){
         const html = this.songs.map((song, index) => {
@@ -93,7 +95,7 @@
         const cdWidth = cd.offsetWidth;
 
         const cdThumbAnime =  cdThumb.animate({
-          transform: 'rotate(180deg)'
+          transform: 'rotate(360deg)'
         }, {
           duration: 10000,
           iterations: Infinity
@@ -131,7 +133,21 @@
         }
 
 
-        
+        volumeToggle.onclick = function(){
+          app.isMute = !app.isMute;
+          volumeToggle.classList.toggle('isMute');
+
+          if (app.isMute){
+              app.muteSong()
+              inputVolume.style = 'display:none';
+          }
+
+          else {
+            audio.volume = volumeSlider.value / 100;
+            inputVolume.style = 'display:block';
+          }
+        }
+
         playBtn.onclick = function(){
           if(app.isPlaying) {
             audio.pause();
@@ -232,6 +248,10 @@
         }
 
 
+      },
+
+      muteSong: function() {
+        audio.volume = 0;
       },
 
       playRandomSong: function() {
